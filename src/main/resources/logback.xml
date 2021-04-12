@@ -1,0 +1,40 @@
+<configuration debug="false">
+  <property name="elk_hostname" value="${logback.destination.hostname:-logstash}" />
+  <property name="elk_port" value="${logback.destination.port:-5044}" />
+
+  <include resource="org/springframework/boot/logging/logback/base.xml"/>
+  <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <destination>${elk_hostname}:${elk_port}</destination>
+    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+      <providers>
+        <mdc/>
+        <timestamp>
+          <timeZone>UTC</timeZone>
+        </timestamp>
+        <version/>
+        <logLevel/>
+        <message/>
+        <loggerName/>
+        <threadName/>
+        <context/>
+        <stackTrace/>
+      </providers>
+    </encoder>
+  </appender>
+  <root level="${logging.level.root:-ERROR}">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="logstash"/>
+  </root>
+  <logger name="org.springframework" level="${logging.level.org.springframework:-ERROR}"/>
+  <logger name="org.springframework.cache" level="${logging.level.org.springframework.cache:-ERROR}"/>
+  <logger name="com.mirgor.smarthome" level="${logging.level.com.mirgor.smarthome:-INFO}"/>
+  <springProperty scope="context" name="application_name" source="spring.application.name" defaultValue="mirgor_default_service"/>
+
+  <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+  </appender>
+
+  <root level="${logging.level.root:-ERROR}">
+    <appender-ref ref="jsonConsoleAppender"/>
+  </root>
+</configuration>

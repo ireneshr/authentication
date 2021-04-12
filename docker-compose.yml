@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: mysql-auth
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_USER: 'authentication'
+      MYSQL_PASSWORD: 'ohGhe2xoot6ohceengee'
+      MYSQL_DATABASE: 'authentication'
+      MYSQL_ROOT_PASSWORD: 'ohGhe2xoot6ohceengee'
+    volumes:
+      - mysql-data-auth:/var/lib/mysql
+    restart: always
+
+volumes:
+  mysql-data-auth:
