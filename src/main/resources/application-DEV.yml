@@ -2,7 +2,7 @@
 # App
 app:
   name: Authentication Service
-  description:
+  description: Authenticate and verify users, devices and microservices.
   path: /usr/app/data
 
 # JWT
@@ -61,7 +61,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/authentication
     username: authentication
-    password: ohGhe2xoot6ohceengee
+    password: w4miTXcHXCXL45pbUnTBeVg
     driver-class-name: com.mysql.cj.jdbc.Driver
     initialization-mode: embedded
   jpa:

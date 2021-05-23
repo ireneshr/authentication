@@ -13,7 +13,7 @@
 	<artifactId>authentication</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>authentication</name>
-	<description>Spring-Boot application preconfigured </description>
+	<description>Authenticate and verify users, devices and microservices.</description>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -82,7 +82,7 @@
 			<version>3.0.0</version>
 		</dependency>
 
-		<!-- lombok -->
+		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -90,7 +90,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- JSON WEB TOKEN -->
+		<!-- JWT -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>

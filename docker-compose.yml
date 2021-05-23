@@ -2,6 +2,22 @@ version: '3.3'
 
 services:
 
+  authentication:
+    image: authentication
+    container_name: authentication
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9100:9100
+    expose:
+      - 9100
+    restart: always
+    depends_on:
+      - mysql-auth
+    volumes:
+      - auth-data:/workspace/logs
+
   mysql:
     image: mysql:8
     container_name: mysql-auth
@@ -9,12 +25,13 @@ services:
       - 3306:3306
     environment:
       MYSQL_USER: 'authentication'
-      MYSQL_PASSWORD: 'ohGhe2xoot6ohceengee'
+      MYSQL_PASSWORD: 'w4miTXcHXCXL45pbUnTBeVg'
       MYSQL_DATABASE: 'authentication'
-      MYSQL_ROOT_PASSWORD: 'ohGhe2xoot6ohceengee'
+      MYSQL_ROOT_PASSWORD: 'w4miTXcHXCXL45pbUnTBeVg'
     volumes:
       - mysql-data-auth:/var/lib/mysql
     restart: always
 
 volumes:
   mysql-data-auth:
+  auth-data:
