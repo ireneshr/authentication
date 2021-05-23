@@ -43,6 +43,12 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- OAuth2 : Authn server (client_credentials) -->
+		<dependency>
+			<groupId>org.springframework.security.oauth.boot</groupId>
+			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+		</dependency>
+
 		<!-- Actuator: Metrics -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

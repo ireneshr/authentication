@@ -78,6 +78,11 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 		chain.doFilter(request, response);
 	}
 
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) {
+		return request.getServletPath().equals(AuthController.M2M_TOKEN);
+	}
+
 	private SecretKey getKey() {
 		return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 	}

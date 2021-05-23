@@ -24,6 +24,7 @@ public class AuthController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
     public static final String REFRESH_TOKEN = "/refreshToken";
+    public static final String M2M_TOKEN = "/oauth/token";
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;

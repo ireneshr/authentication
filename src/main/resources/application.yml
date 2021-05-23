@@ -11,6 +11,14 @@ jwt:
   expiry-time-in-m: 120
   refresh-expiry-time-in-m: 120
 
+# OAuth2
+oauth2:
+  client-id: auth-app-clientId
+  client-secret: auth-app-clientSecret
+  authorized-grant-types: client_credentials
+  expiry-time-in-h: 6
+  refresh-expiry-time-in-h: 6
+
 # Actuator
 management:
   endpoint:
