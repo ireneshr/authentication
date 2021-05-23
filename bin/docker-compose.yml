@@ -1,0 +1,37 @@
+version: '3.3'
+
+services:
+
+  authentication:
+    image: authentication
+    container_name: authentication
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9100:9100
+    expose:
+      - 9100
+    restart: always
+    depends_on:
+      - db-auth
+    volumes:
+      - auth-data:/workspace/logs
+
+  db-auth:
+    image: mariadb:alpha
+    container_name: db-auth
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_USER: 'authentication'
+      MARIADB_PASSWORD: 'w4miTXcHXCXL45pbUnTBeVg'
+      MARIADB_DATABASE: 'authentication'
+      MARIADB_ROOT_PASSWORD: 'w4miTXcHXCXL45pbUnTBeVg'
+    volumes:
+      - db-auth:/var/lib/mysql
+    restart: always
+
+volumes:
+  db-auth:
+  auth-data:
