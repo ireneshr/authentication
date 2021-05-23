@@ -14,24 +14,24 @@ services:
       - 9100
     restart: always
     depends_on:
-      - mysql-auth
+      - db-auth
     volumes:
       - auth-data:/workspace/logs
 
-  mysql:
-    image: mysql:8
-    container_name: mysql-auth
+  db-auth:
+    image: mariadb:alpha
+    container_name: db-auth
     ports:
       - 3306:3306
     environment:
-      MYSQL_USER: 'authentication'
-      MYSQL_PASSWORD: 'w4miTXcHXCXL45pbUnTBeVg'
-      MYSQL_DATABASE: 'authentication'
-      MYSQL_ROOT_PASSWORD: 'w4miTXcHXCXL45pbUnTBeVg'
+      MARIADB_USER: 'authentication'
+      MARIADB_PASSWORD: 'w4miTXcHXCXL45pbUnTBeVg'
+      MARIADB_DATABASE: 'authentication'
+      MARIADB_ROOT_PASSWORD: 'w4miTXcHXCXL45pbUnTBeVg'
     volumes:
-      - mysql-data-auth:/var/lib/mysql
+      - db-auth:/var/lib/mysql
     restart: always
 
 volumes:
-  mysql-data-auth:
+  db-auth:
   auth-data:

@@ -55,9 +55,9 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 					.getBody();
 
 			Object principal = claims.get("sub");
-			ArrayList roles = (ArrayList) claims.get(AUTHORITIES_KEY);
+			String roles = (String) claims.get(JwtUtil.AUTHORITIES_KEY);
 			Authentication auth = new UsernamePasswordAuthenticationToken(principal,null,
-					AuthorityUtils.commaSeparatedStringToAuthorityList(String.join(",", roles)));
+					AuthorityUtils.commaSeparatedStringToAuthorityList(roles));
 
 			//Sets the authentication in the Spring flow
 			SecurityContextHolder.getContext().setAuthentication(auth);
