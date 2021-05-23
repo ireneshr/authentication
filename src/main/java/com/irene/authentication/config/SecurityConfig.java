@@ -1,13 +1,11 @@
 package com.irene.authentication.config;
 
-import com.irene.authentication.controller.AuthController;
 import com.irene.authentication.filters.JWTTokenValidatorFilter;
 import com.irene.authentication.filters.JwtAuthenticationEntryPoint;
 import com.irene.authentication.providers.CustomAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,16 +31,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/v2/api-docs", "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**"
+    };
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                //Token's validation is executed here.
                 .and().exceptionHandling()
                 .authenticationEntryPoint(unauthorizedHandler)
+                //Token's validation is executed here.
                 .and().addFilterBefore(jwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, AuthController.token).permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated();
     }
 
