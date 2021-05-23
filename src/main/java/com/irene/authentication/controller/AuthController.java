@@ -3,6 +3,8 @@ package com.irene.authentication.controller;
 import com.irene.authentication.providers.AuthenticationToken;
 import com.irene.authentication.models.JwtResponse;
 import com.irene.authentication.models.AuthenticationRequest;
+import com.irene.authentication.roles.IsAnonymous;
+import com.irene.authentication.roles.IsAuthenticated;
 import com.irene.authentication.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
@@ -20,10 +22,8 @@ import javax.validation.Valid;
 @RestController
 public class AuthController {
 
-    public static final String token= "/token";
-    public static final String refreshToken= "/refreshToken";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+    public static final String REFRESH_TOKEN = "/refreshToken";
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -33,7 +33,8 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping(value = token)
+    @IsAnonymous
+    @PostMapping( "/token")
     public ResponseEntity generateToken(@Valid AuthenticationRequest authRequest) {
         Authentication auth = null;
         try{
@@ -45,16 +46,18 @@ public class AuthController {
         }
 
         if(auth != null) {
-            return ResponseEntity.ok(new JwtResponse(jwtUtil.generateToken(auth)));
+            return ResponseEntity.ok(jwtUtil.generateToken(auth));
         }
         return null;
     }
 
-    @PostMapping(value = refreshToken)
+    @IsAuthenticated
+    @PostMapping(REFRESH_TOKEN)
     public ResponseEntity<JwtResponse> refreshToken(HttpServletRequest request) {
         // From the HttpRequest get the claims with the expired token details
+        // TODO: Check user's permissions
         Claims claims = (Claims) request.getAttribute("claims");
-        return ResponseEntity.ok(new JwtResponse(jwtUtil.generateRefreshToken(claims)));
+        return ResponseEntity.ok(jwtUtil.generateRefreshToken(claims));
     }
 
 }
