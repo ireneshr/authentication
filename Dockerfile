@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim-buster
+FROM bigboards/java-8-armv7l
 VOLUME /tmp
 ARG JAR_FILE=target/*.jar
 COPY /src/main/resources/application.yml /usr/app/config/
