@@ -41,14 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().headers().frameOptions().sameOrigin()
                 .and().exceptionHandling()
                 .authenticationEntryPoint(unauthorizedHandler)
                 //Token's validation is executed here.
                 .and().addFilterBefore(jwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated();
     }
 
