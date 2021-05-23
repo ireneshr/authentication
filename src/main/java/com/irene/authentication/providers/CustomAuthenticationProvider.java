@@ -22,10 +22,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         if(StringUtil.isNullOrEmpty(auth.getEmail()))
             return null;
-        logger.debug("Authenticating customer.");
+        logger.debug("Authenticating custom user.");
 
         return new AuthenticationToken(auth.getPrincipal(), null, auth.getEmail(),
-                Arrays.asList(new SimpleGrantedAuthority("ROLE_CUSTOMER")));
+                Arrays.asList(new SimpleGrantedAuthority("ROLE_CUSTOM")));
 
        //throw new BadCredentialsException("External system authentication failed.");
     }

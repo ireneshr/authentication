@@ -1,5 +1,6 @@
 package com.irene.authentication.utils;
 
+import com.irene.authentication.models.JwtResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -25,7 +27,7 @@ public class JwtUtil implements Serializable {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtil.class);
 
     private static final long serialVersionUID = -2550185165626007488L;
-    public static final String AUTHORITIES_KEY = "roles";
+    public static final String AUTHORITIES_KEY = "authorities";
 
     @Value("${jwt.issuer}")
     private String issuer;
@@ -75,27 +77,36 @@ public class JwtUtil implements Serializable {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(Authentication auth) {
-        LOGGER.info("Generating token for '{}'.", auth.getPrincipal().toString());
-        return Jwts.builder()
+    public JwtResponse generateToken(Authentication auth) {
+        LOGGER.debug("Generating token for '{}'.", auth.getPrincipal().toString());
+        Date expire = Date.from(Instant.now().plusSeconds(expiryTime * 60));
+
+        String jwt = Jwts.builder()
                 .setIssuer(issuer)
                 .setSubject(auth.getPrincipal().toString())
                 .claim(AUTHORITIES_KEY, getAuthorities(auth))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiryTime * 1_000 * 60))
-                .signWith(getKey()).compact();
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(expire)
+                .signWith(getKey())
+                .compact();
+
+        return new JwtResponse(jwt, String.valueOf(expire.getTime()/1000));
     }
 
-    public String generateRefreshToken(Claims claims) {
+    public JwtResponse generateRefreshToken(Claims claims) {
         String user = claims.get("sub").toString();
-        LOGGER.info("Generating refresh token for '{}'.", user);
-        return Jwts.builder()
-                    .setIssuer(issuer)
-                    .setSubject(user)
-                    .claim(AUTHORITIES_KEY, claims.get(AUTHORITIES_KEY))
-                    .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date(System.currentTimeMillis() + refreshExpiryTime * 1_000 * 60))
-                    .signWith(getKey()).compact();
+        LOGGER.debug("Generating refresh token for '{}'.", user);
+        ArrayList auths = (ArrayList) claims.get(AUTHORITIES_KEY);
+        Date expire = Date.from(Instant.now().plusSeconds(refreshExpiryTime * 60));
+        String jwt = Jwts.builder()
+                .setIssuer(issuer)
+                .setSubject(user)
+                .claim(AUTHORITIES_KEY, auths.toArray())
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(expire)
+                .signWith(getKey())
+                .compact();
+        return new JwtResponse(jwt, String.valueOf(expire.getTime()/1000));
     }
 
 }

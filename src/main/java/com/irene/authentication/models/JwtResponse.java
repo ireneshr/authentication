@@ -1,18 +1,17 @@
 package com.irene.authentication.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @Data
+@AllArgsConstructor
 public class JwtResponse implements Serializable {
 
 	private String jwt;
-
-	public JwtResponse(String jwt) {
-		this.jwt = jwt;
-	}
+	@JsonProperty("expires_in")
+	private String expiresIn;
 
 }
