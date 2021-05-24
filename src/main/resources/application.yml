@@ -59,12 +59,19 @@ spring:
   application:
     name: authentication
 
-    # Distributed tracing
-    zipkin:
-      base-url: http://zipkin:9411/
-    sleuth:
-      sampler:
-        probability: 1
+  # Distributed tracing
+  zipkin:
+    base-url: http://zipkin:9411/
+  sleuth:
+    sampler:
+      probability: 1
+
+  # Kubernetes
+  cloud:
+    kubernetes:
+      enabled: true
+      discovery:
+        enabled: true
 
   # Mysql
   datasource:
