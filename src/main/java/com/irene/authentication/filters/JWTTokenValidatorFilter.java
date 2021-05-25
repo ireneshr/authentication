@@ -40,8 +40,8 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 			return;
 		}
 
-		jwt = jwt.replace(PREFIX, "").replace(PREFIX.strip(), "");
-		if (jwt.isBlank() || jwt.equals("null")) {
+		jwt = jwt.replace(PREFIX, "").replace(PREFIX.trim(), "");
+		if (jwt.isEmpty() || jwt.equals("null")) {
 			anonymousAuthentication();
 			chain.doFilter(request, response);
 			return;

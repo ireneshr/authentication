@@ -79,7 +79,7 @@ spring:
     username: micro-jcon
     password: w4miTXcHXCXL45pbUnTBeVg
     driver-class-name: org.mariadb.jdbc.Driver
-    initialization-mode: always
+    initialization-mode: never
   jpa:
     hibernate:
       ddl-auto: none
