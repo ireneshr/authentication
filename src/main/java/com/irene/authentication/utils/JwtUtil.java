@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,9 +32,9 @@ public class JwtUtil implements Serializable {
     @Value("${jwt.secret-key}")
     private String secret;
     @Value("${jwt.expiry-time-in-m}")
-    private long expiryTime;
+    private int expiryTime;
     @Value("${jwt.refresh-expiry-time-in-m}")
-    private long refreshExpiryTime;
+    private int refreshExpiryTime;
 
     private String getAuthorities(Authentication auth) {
         return auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
@@ -45,7 +46,7 @@ public class JwtUtil implements Serializable {
 
     public JwtResponse generateToken(Authentication auth) {
         LOGGER.debug("Generating token for '{}'.", auth.getPrincipal().toString());
-        Date expire = Date.from(Instant.now().plusSeconds(expiryTime * 60));
+        Date expire = Date.from(Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(expiryTime)));
 
         String jwt = Jwts.builder()
                 .setIssuer(issuer)
@@ -63,7 +64,7 @@ public class JwtUtil implements Serializable {
         String user = claims.get("sub").toString();
         LOGGER.debug("Generating refresh token for '{}'.", user);
         ArrayList auths = (ArrayList) claims.get(AUTHORITIES_KEY);
-        Date expire = Date.from(Instant.now().plusSeconds((refreshExpiryTime * 60)));
+        Date expire = Date.from(Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(refreshExpiryTime)));
         String jwt = Jwts.builder()
                 .setIssuer(issuer)
                 .setSubject(user)

@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class enables client_credentials authorization with Oauth2
@@ -51,8 +52,8 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
                .withClient(clientId)
                .secret(passwordEncoder.encode(clientSecret))
                .authorities("ROLE_MICROSERVICE")
-               .accessTokenValiditySeconds(expiryTime*3600)
-               .refreshTokenValiditySeconds(refreshExpiryTime*3600)
+               .accessTokenValiditySeconds((int) TimeUnit.HOURS.toSeconds(expiryTime))
+               .refreshTokenValiditySeconds((int) TimeUnit.HOURS.toSeconds(refreshExpiryTime))
                .authorizedGrantTypes(authorizedGrantTypes)
                .scopes("read", "write");
    }
