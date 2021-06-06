@@ -1,11 +1,9 @@
 package com.irene.authentication.filters;
 
 import com.irene.authentication.controller.AuthController;
-import com.irene.authentication.utils.JwtUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,11 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 
 public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
-	private final String PREFIX = "Bearer ";
 	private static final String AUTHORITIES_KEY = "authorities";
 	@Value("${jwt.secret-key}")
 	private String secretKey;
@@ -40,7 +36,8 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 			return;
 		}
 
-		jwt = jwt.replace(PREFIX, "").replace(PREFIX.trim(), "");
+		String prefix = "Bearer ";
+		jwt = jwt.replace(prefix, "").replace(prefix.trim(), "");
 		if (jwt.isEmpty() || jwt.equals("null")) {
 			anonymousAuthentication();
 			chain.doFilter(request, response);
@@ -55,7 +52,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 					.getBody();
 
 			Object principal = claims.get("sub");
-			String roles = (String) claims.get(JwtUtil.AUTHORITIES_KEY);
+			String roles = (String) claims.get(AUTHORITIES_KEY);
 			Authentication auth = new UsernamePasswordAuthenticationToken(principal,null,
 					AuthorityUtils.commaSeparatedStringToAuthorityList(roles));
 
@@ -65,7 +62,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
 			String requestURL = request.getRequestURL().toString();
 			// allow for Refresh Token creation if following conditions are true.
-			if (jwt != null && requestURL.contains(AuthController.REFRESH_TOKEN)) {
+			if (requestURL.contains(AuthController.REFRESH_TOKEN)) {
 				//request.setAttribute("auth", ex.getClaims());
 				allowForRefreshToken(e, request);
 			} else {

@@ -61,7 +61,7 @@ spring:
 
   # Distributed tracing
   zipkin:
-    base-url: http://zipkin:9411/
+    base-url: https://zipkin:9411/
   sleuth:
     sampler:
       probability: 1

@@ -14,19 +14,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        AuthenticationToken auth = (AuthenticationToken) authentication;
+        //AuthenticationToken auth = (AuthenticationToken) authentication;
         LOGGER.info("Authenticating custom.");
 
         return null;
 
-//        if(StringUtil.isNullOrEmpty(auth.getEmail()))
-//            return null;
-//        logger.debug("Authenticating custom user.");
-//
-//        return new AuthenticationToken(auth.getPrincipal(), null, auth.getEmail(),
-//                Arrays.asList(new SimpleGrantedAuthority("ROLE_CUSTOM")));
-
-//       throw new BadCredentialsException("External system authentication failed.");
     }
 
     @Override

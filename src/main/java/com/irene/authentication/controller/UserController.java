@@ -3,7 +3,6 @@ package com.irene.authentication.controller;
 import com.irene.authentication.roles.IsAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +19,13 @@ public class UserController {
     //The username is not case sensitive, applies for all methods
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
-    @Qualifier("jdbcUserManager")
-    private UserDetailsManager userDetailsManager;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserDetailsManager userDetailsManager;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserController(@Qualifier("jdbcUserManager")UserDetailsManager userDetailsManager, PasswordEncoder passwordEncoder) {
+        this.userDetailsManager = userDetailsManager;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @GetMapping("/{username}")
     public boolean checkIfUserExists(@PathVariable String username) {

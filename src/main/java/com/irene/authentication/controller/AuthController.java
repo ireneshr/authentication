@@ -37,7 +37,7 @@ public class AuthController {
     @IsAnonymous
     @PostMapping( "/token")
     public ResponseEntity generateToken(@Valid AuthenticationRequest authRequest) {
-        Authentication auth = null;
+        Authentication auth;
         try{
             LOGGER.info("Authenticating user.");
             auth = authenticationManager.authenticate(new AuthenticationToken(authRequest.getUsername(), authRequest.getPassword(),

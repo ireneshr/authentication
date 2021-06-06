@@ -3,8 +3,6 @@ package com.irene.authentication.models;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.Pattern;
-
 @Data
 public class AuthenticationRequest {
 

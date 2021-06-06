@@ -3,7 +3,6 @@ package com.irene.authentication.config;
 import com.irene.authentication.filters.JWTTokenValidatorFilter;
 import com.irene.authentication.filters.JwtAuthenticationEntryPoint;
 import com.irene.authentication.providers.CustomAuthenticationProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,12 +25,15 @@ import javax.sql.DataSource;
 @EnableGlobalMethodSecurity( prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    CustomAuthenticationProvider customAuthenticationProvider;
-    @Autowired
-    private DataSource dataSource;
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final CustomAuthenticationProvider customAuthenticationProvider;
+    private final DataSource dataSource;
+    private final JwtAuthenticationEntryPoint unauthorizedHandler;
+
+    public SecurityConfig(CustomAuthenticationProvider customAuthenticationProvider, DataSource dataSource, JwtAuthenticationEntryPoint unauthorizedHandler) {
+        this.customAuthenticationProvider = customAuthenticationProvider;
+        this.dataSource = dataSource;
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
 
     private static final String[] AUTH_WHITELIST = {
             "/v2/api-docs", "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**"
