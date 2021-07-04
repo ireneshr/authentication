@@ -19,7 +19,7 @@ public class UserRequest {
     @ApiModelProperty(value = "User password.")
     private String password;
     @NotBlank
-    @ApiModelProperty(value = "User password.")
+    @ApiModelProperty(value = "User role.")
     private String role;
 
 }

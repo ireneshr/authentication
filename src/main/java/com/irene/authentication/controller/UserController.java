@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@Valid UserRequest request) {
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserRequest request) {
         LOGGER.debug("Started creating user '{}'.", request.getUsername());
 
         if (checkIfUserExists(request.getUsername())) {
