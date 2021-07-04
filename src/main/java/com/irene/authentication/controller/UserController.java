@@ -1,5 +1,6 @@
 package com.irene.authentication.controller;
 
+import com.irene.authentication.models.UserRequest;
 import com.irene.authentication.roles.IsAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @IsAdmin
 @RestController
@@ -33,35 +36,37 @@ public class UserController {
         return userDetailsManager.userExists(username);
     }
 
-    @PostMapping("/{username}/{password}/{role}")
-    public ResponseEntity<String> createUser(@PathVariable String username, @PathVariable String password,
-                                             @PathVariable String role) {
-        LOGGER.debug("Started creating user '{}'.", username);
+    @PostMapping
+    public ResponseEntity<String> createUser(@Valid UserRequest request) {
+        LOGGER.debug("Started creating user '{}'.", request.getUsername());
 
-        if (checkIfUserExists(username)) {
-            LOGGER.error("Username '{}' exists.", username);
+        if (checkIfUserExists(request.getUsername())) {
+            LOGGER.error("Username '{}' exists.", request.getUsername());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username exists.");
         }
 
-        String dbRole = role.toUpperCase();
+        String dbRole = request.getRole().toUpperCase();
         userDetailsManager.createUser(
-                User.withUsername(username).password(passwordEncoder.encode(password)).roles(dbRole).build());
-        LOGGER.info("User created successfully for '{}'.", username);
+                User.withUsername(request.getUsername())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .roles(dbRole).build());
+        LOGGER.info("User created successfully for '{}'.", request.getUsername());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/{username}/{password}/{role}")
-    public ResponseEntity<String> updateUser(@PathVariable String username, @PathVariable String password,
-                                             @PathVariable String role) {
-        LOGGER.debug("Started updating user '{}'.", username);
-        if (!checkIfUserExists(username)) {
-            LOGGER.error("Username '{}' does not exist and cannot be updated.", username);
+    @PutMapping
+    public ResponseEntity<String> updateUser(@Valid UserRequest request) {
+        LOGGER.debug("Started updating user '{}'.", request.getUsername());
+        if (!checkIfUserExists(request.getUsername())) {
+            LOGGER.error("Username '{}' does not exist and cannot be updated.", request.getUsername());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username does not exist.");
         }
-        String dbRole = role.toUpperCase();
+        String dbRole = request.getRole().toUpperCase();
         userDetailsManager.updateUser(
-                User.withUsername(username).password(passwordEncoder.encode(password)).roles(dbRole).build());
-        LOGGER.info("User updated successfully for '{}'.", username);
+                User.withUsername(request.getUsername())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .roles(dbRole).build());
+        LOGGER.info("User updated successfully for '{}'.", request.getUsername());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
