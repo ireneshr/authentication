@@ -36,7 +36,9 @@ public class SpringFoxConfig {
                 //.apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
-                .apiInfo(apiInfo());
+                .apiInfo(apiInfo())
+                .securityContexts(Arrays.asList(securityContext()))
+                .securitySchemes(Arrays.asList(apiKey()));
     }
 
     private ApiInfo apiInfo() {
